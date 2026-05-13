@@ -157,17 +157,47 @@
                     </div>
 
                     <!-- BUTTON -->
-                    <button type="submit"
+          <button type="submit"
 
-                            class="w-full bg-gradient-to-r
-                                   from-indigo-600 to-blue-500
-                                   hover:from-indigo-700 hover:to-blue-600
-                                   text-white font-bold py-3 rounded-2xl
-                                   shadow-lg transition-all duration-300">
+    style="
+        width:100%;
+        background:linear-gradient(to right,#4f46e5,#3b82f6);
+        color:white;
+        font-size:18px;
+        font-weight:700;
+        padding:14px;
+        border:none;
+        border-radius:18px;
+        margin-top:24px;
+        cursor:pointer;
+        box-shadow:0 10px 20px rgba(79,70,229,0.25);
+    ">
 
-                        Login
+    LOGIN
 
-                    </button>
+</button>
+<!-- REGISTER -->
+<div style="text-align:center;margin-top:20px;">
+
+    <span style="font-size:14px;color:#64748b;">
+
+        Belum punya akun?
+
+    </span>
+
+    <a href="{{ route('register') }}"
+       style="
+            color:#4f46e5;
+            font-weight:600;
+            text-decoration:none;
+            margin-left:4px;
+       ">
+
+        Daftar
+
+    </a>
+
+</div>
 
                 </form>
 
