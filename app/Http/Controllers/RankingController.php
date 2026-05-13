@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Siswa;
 use App\Models\Kriteria;
 use App\Models\Penilaian;
@@ -11,53 +10,41 @@ class RankingController extends Controller
 {
     public function index()
     {
-        $siswa = Siswa::all();
-        $kriteria = Kriteria::all();
+        $kriterias = Kriteria::orderBy('id')->get();
+        $siswas    = Siswa::with('penilaians')->get();
 
         $hasil = [];
 
-        foreach ($siswa as $s) {
+        foreach ($siswas as $siswa) {
+            $skor    = 0;
+            $lengkap = true;
 
-            $total = 0;
-
-            foreach ($kriteria as $k) {
-
-                $nilai = Penilaian::where([
-                    'siswa_id' => $s->id,
-                    'kriteria_id' => $k->id
-                ])->value('nilai') ?? 0;
-
-                // 🔥 hitung nilai x bobot
-                $total += $nilai * $k->bobot;
+            foreach ($kriterias as $k) {
+                $p = $siswa->penilaians->firstWhere('kriteria_id', $k->id);
+                if (!$p || !$k->bobot) {
+                    $lengkap = false;
+                    break;
+                }
+                $skor += ($p->nilai / 100) * $k->bobot;
             }
 
-            // 🔥 status kesiapan
-            if ($total >= 80) {
+            if (!$lengkap) continue;
 
-                $status = "Layak";
+            if ($skor >= 0.75)         $status = 'Layak';
+            elseif ($skor >= 0.50)     $status = 'Perlu Bimbingan';
+            else                       $status = 'Tidak Layak';
 
-            } elseif ($total >= 60) {
-
-                $status = "Perlu Bimbingan";
-
-            } else {
-
-                $status = "Tidak Layak";
-            }
-
-            // 🔥 simpan hasil
             $hasil[] = [
-                'nama' => $s->nama_siswa,
-                'skor' => $total,
-                'status' => $status
+                'siswa_id' => $siswa->id,
+                'siswa'    => $siswa->nama_siswa,
+                'skor'     => $skor,
+                'status'   => $status,
+                'nilai'    => $siswa->penilaians->pluck('nilai', 'kriteria_id'),
             ];
         }
 
-        // 🔥 urutkan ranking terbesar
-        usort($hasil, function ($a, $b) {
-            return $b['skor'] <=> $a['skor'];
-        });
+        usort($hasil, fn($a, $b) => $b['skor'] <=> $a['skor']);
 
-        return view('ranking.index', compact('hasil'));
+        return view('ranking.index', compact('hasil', 'kriterias'));
     }
 }

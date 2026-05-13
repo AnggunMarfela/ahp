@@ -42,7 +42,7 @@ class DashboardController extends Controller
 
             $total = 0;
 
-            foreach ($kriteria as $k) {
+            foreach ($kriterias as $k) {
 
                 $nilai = Penilaian::where([
                     'siswa_id' => $s->id,
@@ -70,7 +70,7 @@ class DashboardController extends Controller
             }
 
             $hasil[] = [
-                'nama' => $s->nama_siswa,
+                'siswa' => $s->nama_siswa,
                 'skor' => $total,
                 'status' => $status
             ];
@@ -84,14 +84,14 @@ class DashboardController extends Controller
 
         $rataKriteria = [];
 
-        foreach ($kriteria as $k) {
+        foreach ($kriterias as $k) {
 
             $avg = Penilaian::where('kriteria_id', $k->id)
                     ->avg('nilai');
 
             $rataKriteria[] = [
                 'nama' => $k->nama_kriteria,
-                'nilai' => round($avg ?? 0)
+                'rata' => round($avg ?? 0)
             ];
         }
 
@@ -102,14 +102,15 @@ class DashboardController extends Controller
         */
 
         return view('dashboard', compact(
-            'totalSiswa',
-            'totalKriteria',
-            'totalPenilaian',
-            'layak',
-            'bimbingan',
-            'tidakLayak',
-            'hasil',
-            'rataKriteria'
-        ));
+    'totalSiswa',
+    'totalKriteria',
+    'totalPenilaian',
+    'layak',
+    'bimbingan',
+    'tidakLayak',
+    'hasil',
+    'rataKriteria',
+    'kriterias'
+));
     }
 }

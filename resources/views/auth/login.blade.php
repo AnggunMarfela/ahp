@@ -1,47 +1,189 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('layouts.guest')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+@section('content')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+<div class="min-h-screen flex items-center justify-center
+            bg-gradient-to-br from-indigo-100 via-white to-blue-100 px-4">
+
+    <div class="w-full max-w-md">
+
+        <!-- CARD LOGIN -->
+        <div class="bg-white rounded-[32px] shadow-2xl border border-slate-100 overflow-hidden">
+
+            <!-- TOP -->
+            <div class="bg-gradient-to-r from-indigo-600 to-blue-500 p-8 text-center">
+
+                <div class="w-24 h-24 bg-white/20 backdrop-blur
+                            rounded-full flex items-center justify-center
+                            mx-auto mb-4 border border-white/30">
+
+                    <i class="ti ti-school text-white text-5xl"></i>
+
+                </div>
+
+                <h1 class="text-3xl font-bold text-white">
+
+                    SPK Kesiapan SD
+
+                </h1>
+
+                <p class="text-indigo-100 mt-2 text-sm">
+
+                    Sistem Pendukung Keputusan Metode AHP
+
+                </p>
+
+            </div>
+
+            <!-- FORM -->
+            <div class="p-8">
+
+                <!-- SESSION STATUS -->
+                @if (session('status'))
+
+                    <div class="mb-4 text-sm text-green-600">
+
+                        {{ session('status') }}
+
+                    </div>
+
+                @endif
+
+                <form method="POST" action="{{ route('login') }}">
+
+                    @csrf
+
+                    <!-- EMAIL -->
+                    <div class="mb-5">
+
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            Email
+
+                        </label>
+
+                        <div class="relative">
+
+                            <span class="absolute left-4 top-3.5 text-slate-400">
+
+                                <i class="ti ti-mail"></i>
+
+                            </span>
+
+                            <input type="email"
+                                   name="email"
+                                   value="{{ old('email') }}"
+                                   required
+                                   autofocus
+                                   autocomplete="username"
+
+                                   class="w-full pl-11 pr-4 py-3 rounded-2xl
+                                          border border-slate-300
+                                          focus:outline-none
+                                          focus:ring-2
+                                          focus:ring-indigo-500
+                                          focus:border-indigo-500">
+
+                        </div>
+
+                        @error('email')
+
+                            <p class="text-red-500 text-xs mt-2">
+
+                                {{ $message }}
+
+                            </p>
+
+                        @enderror
+
+                    </div>
+
+                    <!-- PASSWORD -->
+                    <div class="mb-5">
+
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">
+
+                            Password
+
+                        </label>
+
+                        <div class="relative">
+
+                            <span class="absolute left-4 top-3.5 text-slate-400">
+
+                                <i class="ti ti-lock"></i>
+
+                            </span>
+
+                            <input type="password"
+                                   name="password"
+                                   required
+                                   autocomplete="current-password"
+
+                                   class="w-full pl-11 pr-4 py-3 rounded-2xl
+                                          border border-slate-300
+                                          focus:outline-none
+                                          focus:ring-2
+                                          focus:ring-indigo-500
+                                          focus:border-indigo-500">
+
+                        </div>
+
+                        @error('password')
+
+                            <p class="text-red-500 text-xs mt-2">
+
+                                {{ $message }}
+
+                            </p>
+
+                        @enderror
+
+                    </div>
+
+                    <!-- REMEMBER -->
+                    <div class="flex items-center justify-between mb-6">
+
+                        <label class="flex items-center gap-2 text-sm text-slate-600">
+
+                            <input type="checkbox"
+                                   name="remember"
+                                   class="rounded border-slate-300 text-indigo-600 shadow-sm">
+
+                            Remember me
+
+                        </label>
+
+                    </div>
+
+                    <!-- BUTTON -->
+                    <button type="submit"
+
+                            class="w-full bg-gradient-to-r
+                                   from-indigo-600 to-blue-500
+                                   hover:from-indigo-700 hover:to-blue-600
+                                   text-white font-bold py-3 rounded-2xl
+                                   shadow-lg transition-all duration-300">
+
+                        Login
+
+                    </button>
+
+                </form>
+
+            </div>
+
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        <!-- FOOTER -->
+        <p class="text-center text-xs text-slate-500 mt-6">
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+            © {{ date('Y') }} SPK Kesiapan Anak Masuk SD
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+        </p>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+    </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+</div>
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+@endsection
