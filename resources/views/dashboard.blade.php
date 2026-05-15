@@ -1,6 +1,6 @@
-<php
 
-<body>
+
+<tbody>
 
     @forelse ($hasil as $item)
 

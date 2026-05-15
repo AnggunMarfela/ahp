@@ -30,49 +30,93 @@ class DashboardController extends Controller
         */
 
         $layak = 0;
+
         $bimbingan = 0;
+
         $tidakLayak = 0;
 
         $hasil = [];
 
+        /*
+        |--------------------------------------------------------------------------
+        | AMBIL DATA
+        |--------------------------------------------------------------------------
+        */
+
         $siswa = Siswa::all();
-        $kriteria = Kriteria::all();
+
+        $kriterias = Kriteria::all();
+
+        /*
+        |--------------------------------------------------------------------------
+        | HITUNG NILAI
+        |--------------------------------------------------------------------------
+        */
 
         foreach ($siswa as $s) {
 
             $total = 0;
 
+            $nilaiSiswa = [];
+
             foreach ($kriterias as $k) {
 
                 $nilai = Penilaian::where([
+
                     'siswa_id' => $s->id,
+
                     'kriteria_id' => $k->id
+
                 ])->value('nilai') ?? 0;
 
+                // SIMPAN NILAI
+                $nilaiSiswa[$k->id] = $nilai;
+
+                // HITUNG TOTAL
                 $total += $nilai * ($k->bobot ?? 1);
             }
 
-            // status
+            /*
+            |--------------------------------------------------------------------------
+            | STATUS
+            |--------------------------------------------------------------------------
+            */
+
             if ($total >= 80) {
 
                 $status = "Layak";
+
                 $layak++;
 
             } elseif ($total >= 60) {
 
                 $status = "Perlu Bimbingan";
+
                 $bimbingan++;
 
             } else {
 
                 $status = "Tidak Layak";
+
                 $tidakLayak++;
             }
 
+            /*
+            |--------------------------------------------------------------------------
+            | HASIL
+            |--------------------------------------------------------------------------
+            */
+
             $hasil[] = [
+
                 'siswa' => $s->nama_siswa,
+
+                'nilai' => $nilaiSiswa,
+
                 'skor' => $total,
+
                 'status' => $status
+
             ];
         }
 
@@ -90,27 +134,32 @@ class DashboardController extends Controller
                     ->avg('nilai');
 
             $rataKriteria[] = [
+
                 'nama' => $k->nama_kriteria,
+
                 'rata' => round($avg ?? 0)
+
             ];
         }
 
         /*
         |--------------------------------------------------------------------------
-        | KIRIM KE VIEW
+        | RETURN VIEW
         |--------------------------------------------------------------------------
         */
 
         return view('dashboard', compact(
-    'totalSiswa',
-    'totalKriteria',
-    'totalPenilaian',
-    'layak',
-    'bimbingan',
-    'tidakLayak',
-    'hasil',
-    'rataKriteria',
-    'kriterias'
-));
+
+            'totalSiswa',
+            'totalKriteria',
+            'totalPenilaian',
+            'layak',
+            'bimbingan',
+            'tidakLayak',
+            'hasil',
+            'rataKriteria',
+            'kriterias'
+
+        ));
     }
 }
