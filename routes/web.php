@@ -9,6 +9,7 @@ use App\Http\Controllers\PenilaianController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AhpController;
+use App\Http\Controllers\PenggunaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -72,3 +73,8 @@ Route::delete('/penilaian/{siswa}', [PenilaianController::class, 'destroy'])->na
 });
 
 require __DIR__.'/auth.php';
+
+Route::middleware(['auth', 'verified', 'admin'])->group(function () {
+    Route::resource('/pengguna', PenggunaController::class);
+    
+});

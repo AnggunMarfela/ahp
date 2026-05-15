@@ -16,11 +16,11 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('siswa_id')
-                  ->constrained('siswas')
+                  ->constrained('siswa')
                   ->cascadeOnDelete();
 
             $table->foreignId('kriteria_id')
-                  ->constrained('kriterias')
+                  ->constrained('kriteria')
                   ->cascadeOnDelete();
 
             $table->double('nilai');

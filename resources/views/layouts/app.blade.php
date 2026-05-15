@@ -48,6 +48,15 @@
 
             </a>
 
+            @if(auth()->user()->isAdmin())
+<a href="/pengguna"
+   class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition
+          {{ request()->is('pengguna*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700' }}">
+    <i class="ti ti-user text-base"></i>
+    Pengguna
+</a>
+@endif
+
             <!-- SISWA -->
             <a href="/siswa"
                class="flex items-center gap-3 px-4 py-3 rounded-xl transition
